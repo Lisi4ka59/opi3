@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Lab3 web</title>
+    <link rel="stylesheet" href="resources/CSS/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js" type="text/javascript"/>
+</h:head>
+<h:outputScript>
+    jQuery(function(){
+        function countDigits(number) {
+            var numberString = number.toString();
+
+            if (numberString.length > 15){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        function valid(){
+            let y = jQuery("#forma\\:vvody").val();
+            if(isNaN(y) || y=="" || countDigits(y) || !((5>=y &amp; y>=-5))){
+                jQuery("#forma\\:vvody").addClass('invalid');
+            }
+            if ((3>=y &amp; y>=-5) &amp; !(isNaN(y) || y=="" || countDigits(y))){
+                jQuery("#forma\\:vvody").removeClass('invalid');
+            }
+            if ((3>=y &amp; y>=-5) &amp; !(isNaN(y) || y=="" || countDigits(y))){
+                return true;}
+            return false;
+
+        };
+        function keyevent(){
+            if(!valid()){
+                jQuery("#submition").prop("disabled", true);
+            }else{
+                jQuery("#submition").prop("disabled", false);
+            }
+
+        };
+
+
+        jQuery(".xbutton").on("click", function(){jQuery("#vvodx").val(jQuery(this).html());
+            event.preventDefault();
+            keyevent();});
+        jQuery("#forma\\:vvody").on("keypress", keyevent);
+        jQuery("#forma\\:vvody").on("click", keyevent);
+        jQuery("#forma\\:vvody").on("hover", keyevent);
+        jQuery("#forma\\:vvody").on("keyup", keyevent);
+
+        jQuery("#forma").on("R", function(){
+            if(!valid()){
+                event.preventDefault();
+                keyevent();
+            };
+        });
+    });
+
+</h:outputScript>
+<h:body>
+
+<f:view>
+
+
+
+    <img src="resources/img/back.jpg" alt="back" id="back"/>
+    <div class="intro" id="intro"></div>
+    <div class="container">
+    <div class="data">
+        <img src="resources/img/capy.jpg" alt="profile" class="profile-pic"/>
+        <div class="header-info">
+            <p style="font-size: 34px"><b>Mikhail Nachinkin</b></p>
+            <p>Группа: P3206</p>
+            <p>Вариант: 1734</p>
+            <a href="https://vk.com/nachinkin1" ><img src="resources/img/VK logo.png" alt="vk" style="border-radius: 30px" class="contact"/></a>
+            <a href="https://github.com/Lisi4ka59" ><img src="resources/img/github logo.png" alt="github" class="contact"/></a>
+            <a href="https://isu.ifmo.ru/pls/apex/f?p=2437:99:106462222053412" ><img src="resources/img/ITMO logo.png" alt="itmo" class="contact"/></a>
+            <a href="http://localhost:8080/web_lab3-1.0-SNAPSHOT/index.xhtml" ><img src="resources/img/main.png" alt="index" class="contact"/></a>
+
+        </div>
+    </div>
+    <h:form id="forma">
+
+        <div class="xy_table">
+            <div id="da" style="padding: 0; border-radius: 10px">
+                    <h:graphicImage value="GraphicsServlet?x=#{beanCoordinates.inputX * 74 / beanCoordinates.inputR + 100}&amp;y=#{100 - beanCoordinates.inputY * 74 / beanCoordinates.inputR}&amp;r=#{beanCoordinates.inputR}&amp;e=false"/>
+                <div id="resultat">
+                </div>
+            </div>
+            <div class="xy"> <div id="X"> X </div><div class="input"><label for="vvodx"></label>
+                <h:selectOneMenu value="#{beanCoordinates.inputX}" class="in" name="X" id="vvodx">
+                <f:selectItem itemValue = "-3" itemLabel = "-3" />
+                <f:selectItem itemValue = "-2" itemLabel = "-2" />
+                <f:selectItem itemValue = "-1" itemLabel = "-1" />
+                <f:selectItem itemValue = "0" itemLabel = "0" />
+                <f:selectItem itemValue = "1" itemLabel = "1" />
+                <f:selectItem itemValue = "2" itemLabel = "2" />
+                <f:selectItem itemValue = "3" itemLabel = "3" />
+                <f:selectItem itemValue = "4" itemLabel = "4" />
+                <f:selectItem itemValue = "5" itemLabel = "5" />
+            </h:selectOneMenu> </div>
+            <div class="xy"> <div><label for="vvody">Y</label></div><div class="input">
+                <h:inputText value="#{beanCoordinates.inputY}" class="in" name="Y" id="vvody"/> </div>  </div>
+        <div class="xy" > <div> R </div><div class="input"><label></label>
+            <p/>
+                <h:commandLink class="sub" action="#{beanCoordinates.setSuperInputR('1')}" style="background-color: white; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; font-size: 14px" name="R" value=" Параметр R = 1 "/>
+            <p/>
+                <h:commandLink class="sub" action="#{beanCoordinates.setSuperInputR('1.5')}" style="background-color: white; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; font-size: 14px" name="R" value=" Параметр R = 1.5"/>
+            <p/>
+                <h:commandLink class="sub" action="#{beanCoordinates.setSuperInputR('2')}" style="background-color: white; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; font-size: 14px" name="R" value=" Параметр R = 2 "/>
+            <p/>
+                <h:commandLink class="sub" action="#{beanCoordinates.setSuperInputR('2.5')}" style="background-color: white; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; font-size: 14px" name="R" value=" Параметр R = 2.5"/>
+            <p/>
+                <h:commandLink class="sub" action="#{beanCoordinates.setSuperInputR('3')}" style="background-color: white; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; font-size: 14px" name="R" value=" Параметр R = 3 "/>
+            </div>
+            <div>
+                <h:commandLink id="submition" action="#{beanCoordinates.setR(beanCoordinates.inputR)}" style="background-color: white; padding-left: 4px; padding-right: 4px; padding-top: 2px; padding-bottom: 2px; font-size: 18px" name="R" value="Submit"></h:commandLink>
+            </div>
+        </div>
+            </div>
+            <div class="table">
+                <table class="res">
+                    <tr style="border-collapse: collapse">
+                        <th style="border-top-left-radius: 15px; text-align: center">Координата Х</th>
+                        <th style=" text-align: center">Координата У</th>
+                        <th style=" text-align: center">Значение R</th>
+                        <th style="border-top-right-radius: 15px; text-align: center ">Результат</th>
+                    </tr>
+                    <h:outputText id="hist" escape="false" value="#{beanCoordinates.result}"/>
+                </table>
+            </div>
+
+        </div>
+
+
+
+
+    </h:form>
+    <div id="table">
+    <table id="res">
+    <tr>
+        <th style="border-top-left-radius: 10px">Координата Х</th>
+        <th>Координата У</th>
+        <th>Значение R</th>
+        <th>Время столкновения снаряда с объектом</th>
+        <th>Время полета снаряда</th>
+        <th style="border-top-right-radius: 10px">Результат</th>
+    </tr>
+        <h:outputText id="history" escape="false" value="#{beanCoordinates.history}"/>
+    </table>
+    </div>
+
+    </div>
+
+    <h:outputScript>
+            jQuery("#da").click(function (event){
+                let parentOffset = jQuery(this).offset();
+                $("#forma\\:vvodx").val(Math.round((event.pageX - parentOffset.left - 100)/74));
+                $("#forma\\:vvody").val(-((event.pageY - parentOffset.top - 100)/74).toFixed(3));
+                $('#forma').trigger("submit");
+
+
+            });
+            jQuery("#da").click(function (event){
+        #{beanCoordinates.setR(beanCoordinates.inputR)}
+
+
+            });
+            $(window).on('scroll', function (){
+                $('#back').css('top', $(window).scrollTop()/1.5);
+            });
+            jQuery(".sub").click(function () {
+                R = $('input[name="R"]:checked').val();
+                jQuery("#d").css("background-image", "url('GraphicsServlet?x=1000&amp;y=1000&amp;r=' + R)");
+            });
+
+    </h:outputScript>
+
+    <script src="resources/JS/three.r134.min.js" type="text/javascript"></script>
+    <script src="resources/JS/vanta.birds.min.js" type="text/javascript" ></script>
+    <script src="resources/JS/app.js" type="text/javascript"></script>
+</f:view>
+</h:body>
+</html>

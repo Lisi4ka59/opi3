@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.8
+Created-By: 17.0.2+8-1 (OpenJDK BSD Porting Team)
+
+Name: Checksums SHA
+SHA1: cache/sha/DIGEST.sha256sum
+
+Name: Checksums MD5
+MD5: cache/md5/DIGEST.md5sum
+

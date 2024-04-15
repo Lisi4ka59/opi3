@@ -1,0 +1,149 @@
+<project>
+
+	<import file="maven-build.xml"/>
+
+	<property file="build_ant.properties"/>
+
+
+	<target name="cp" depends="build">
+		<copy file="target/web_lab3-1.0-SNAPSHOT.war" todir="../../wildfly/standalone/deployments"/>
+	</target>
+
+	<target name="clean">
+		<delete file="../../wildfly/standalone/deployments/web_lab3-1.0-SNAPSHOT.war"/>
+		<delete dir="target"/>
+		<delete dir="revision1"/>
+		<delete dir="revision2"/>
+		<delete file="team-build.zip"/>
+		<delete file="diff.txt"/>
+		<delete dir="history_next"/>
+		<delete dir="history"/>
+		<delete dir="cache"/>
+		<delete file="history_diff"/>
+		<delete dir="doc" />
+	</target>
+
+	<target name="diff" depends="build">
+		<exec executable="svn" output="diff.txt">
+  			<arg line="diff"/>
+		</exec>
+		<chmod file="automatic_commit.sh" perm="ug+x"/>
+		<exec executable="./automatic_commit.sh">
+		</exec>
+	</target>
+
+	<target name="build" depends="compile, package">
+		<sound>
+			<success source="success.wav"/>
+ 			<fail source="fail.wav"/>
+		</sound>
+	</target>
+	
+	<target name="native2ascii">
+		<mkdir dir="${localisation.dir}" />
+		<native2ascii encoding="UTF-8" src="${resources.dir}" includes="*.properties" dest="${localisation.dir}" />
+	</target>
+
+	<target name="xml">
+		<xmlvalidate failonerror="no" lenient="yes" warn="yes">
+			<fileset dir="." includes="*.xml"/>
+		</xmlvalidate>
+		<xmlvalidate file="src/test.xml" failonerror="no" lenient="yes" warn="yes"/>
+	</target>
+
+	<target name="doc">
+		<checksum algorithm="SHA-256" fileext=".sha256" todir="${dir.cache}/sha">
+			<fileset dir="${dir.release}" />
+		</checksum>
+		<checksum algorithm="MD5" fileext=".md5" todir="${dir.cache}/md5">
+			<fileset dir="${dir.release}"/>
+		</checksum>
+		<antcall target="javadoc" />
+		<concat destfile="${dir.cache}/sha/DIGEST.sha256sum">
+			<fileset dir="${dir.cache}/sha" />
+		</concat>
+		<concat destfile="${dir.cache}/md5/DIGEST.md5sum">
+			<fileset dir="${dir.cache}/md5"/>
+		</concat>
+		<manifest file="${dir.cache}/MANIFEST.MF">
+			<section name="Checksums SHA">
+				<attribute name="SHA1" value="${dir.cache}/sha/DIGEST.sha256sum" />
+			</section>
+			<section name="Checksums MD5">
+				<attribute name="MD5" value="${dir.cache}/md5/DIGEST.md5sum"/>
+			</section>
+		</manifest>
+	</target>
+
+	<target name="team" description="Retrieve previous revisions, build, and package">
+    		<exec executable="svn">
+        		<arg line="export -r PREV . revision1 --force" />
+    		</exec>
+		<ant antfile="build.xml" dir="revision1" target="build"/>
+		<chmod file="revision.sh" perm="ug+x"/>
+    		<exec executable="./revision.sh">
+    		</exec>
+		<ant antfile="build.xml" dir="revision2" target="build" />
+		<zip destfile="team-build.zip">
+        		<fileset dir="revision1/target">
+            			<include name="*.war" />
+        		</fileset>
+        		<fileset dir="revision2/target">
+            			<include name="*.war" />
+        		</fileset>
+    		</zip>
+	</target>
+  
+	<target name="scp" depends="build" description="Transfer the built project using SCP">
+    		<scp todir="${server.username}:${server.password}@${server.host}:${remote.directory}">
+        		<fileset dir="target">
+            			<include name="*.war" />
+        		</fileset>
+    		</scp>
+	</target>
+
+	<target name="history">
+		<chmod file="get_history.py" perm="ug+x"/>
+    		<exec executable="./get_history.py">
+    		</exec>
+	</target>
+
+	<target name="alt">
+		<delete dir="${maven.build.dir}" />
+		<copy todir="${alt.dir}">
+			<fileset dir="${src.dir}" />
+		</copy>
+		<replace dir="${src.dir}">
+			<exclude name="**/*.jar" />
+			<replacefilter token="BeanCoordinates" value="Leonardo"/>
+			<replacefilter token="BeanHistory" value="Raphael" />
+			<replacefilter token="DotValidator" value="Michelangelo"/>
+			<replacefilter token="GraphicsServlet" value="Donatello"/>
+			<replacefilter token="inputX" value="coolX"/>
+			<replacefilter token="inputY" value="coolY"/>
+			<replacefilter token="inputR" value="coolR"/>
+		</replace>
+		<move todir="${src.dir}" includeemptydirs="false">
+			<fileset dir="${src.dir}">
+				<exclude name="**/*.jar"/>
+			</fileset>
+			<filtermapper>
+				<replacestring from="BeanCoordinates" to="Leonardo"/>
+				<replacestring from="BeanHistory" to="Raphael"/>
+				<replacestring from="DotValidator" to="Michelangelo"/>
+				<replacestring from="GraphicsServlet" to="Donatello"/>
+			</filtermapper>
+		</move>
+
+		<antcall target="clean"/>
+		<antcall target="build"/>
+
+		<delete dir="${src.dir}"/>
+		<copy todir="${src.dir}">
+			<fileset dir="${alt.dir}" />
+		</copy>
+		<delete dir="${alt.dir}"/>
+	</target>
+
+
+</project>

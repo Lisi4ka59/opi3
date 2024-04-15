@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.lisi4ka.web_lab3","l":"BeanCoordinates"},{"p":"com.lisi4ka.web_lab3","l":"BeanHistory"},{"p":"com.lisi4ka.web_lab3","l":"DotValidator"},{"p":"com.lisi4ka.web_lab3","l":"GraphicsServlet"}];updateSearchResults();
